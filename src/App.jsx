@@ -19,7 +19,17 @@ const App = () => {
   }
 
   const addNewTodo = (name) => {
-    alert(`Call me ${name}`);
+    const maxId = todoList.length > 0 ? Math.max(...todoList.map(todoId => todoId.id)) : 1;
+
+    const newTodo = {
+      id: maxId + 1,
+      name: name
+    }
+    setTodoList([...todoList, newTodo]);
+  }
+
+  const randomIntFromInterval = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   return (

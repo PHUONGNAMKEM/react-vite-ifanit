@@ -1,16 +1,18 @@
+import { useState } from "react";
+
 const TodoNew = (props) => {
+
+  const [valueInput, setValueInput] = useState("iFanIT");
 
   const { addNewTodo } = props;
 
-  // addNewTodo("iFanIT");
-  const handleClick = (content) => {
-    alert(`Click me: ${content}`);
+
+  const handleClick = () => {
+    alert(`Click me: ${valueInput}`);
   }
 
-  let content = "";
   const handleOnChange = (event) => {
-    // alert(`Click me: ${event}`);
-    console.log(">>> on change  ", event)
+    setValueInput(event)
   }
 
 
@@ -21,6 +23,10 @@ const TodoNew = (props) => {
         style={{ cursor: "pointer", }}
         onClick={handleClick}
       >Add</button>
+
+      <div>My text input is = {valueInput}</div>
+
+
     </div>
   );
 }

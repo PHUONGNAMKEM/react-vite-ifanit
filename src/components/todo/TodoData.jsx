@@ -1,7 +1,13 @@
+import { useState } from "react";
 import "./todo.css"
 const TodoData = (props) => {
 
-    const { todoList } = props;
+    const { todoList, deleteTodo } = props;
+
+    const handleDelete = (id) => {
+        deleteTodo(id)
+    }
+
     return (
         <div className="todo-data">
 
@@ -9,7 +15,7 @@ const TodoData = (props) => {
                 return (
                     <div className="todo-item" key={todo.id}>
                         <div>{todo.id} - {todo.name}</div>
-                        <button style={{ background: "red" }}>Delete</button>
+                        <button onClick={() => handleDelete(todo.id)} style={{ background: "red", cursor: "pointer" }}>Delete</button>
                     </div>
                 )
             })}

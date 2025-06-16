@@ -1,13 +1,21 @@
+import "./todo.css"
 const TodoData = (props) => {
 
-    const { name, todoList } = props;
+    const { todoList } = props;
     console.log(">>> check todo list: ", todoList);
 
     return (
         <div className="todo-data">
-            {/* <div>My name is {name}</div>
-            <div>Learning React</div>
-            <div>Watching Youtube</div> */}
+
+            {todoList.map((todo) => {
+                return (
+                    <div className="todo-item">
+                        <div>{todo.id} - {todo.name}</div>
+                        <button style={{ background: "red" }}>Delete</button>
+                    </div>
+
+                )
+            })}
 
             {JSON.stringify(todoList)}
         </div>

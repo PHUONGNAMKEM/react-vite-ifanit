@@ -1,6 +1,7 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LoginOutlined } from '@ant-design/icons';
 import { Button, Input, Space } from 'antd';
 import { useState } from 'react';
+import axios from "axios";
 
 const UserForm = () => {
 
@@ -11,6 +12,26 @@ const UserForm = () => {
 
 
     const handleClickBtn = () => {
+
+        const URL_BACKEND = "http://localhost:8080/api/v1/user";
+        const data = {
+            fullName: fullName,
+            email: email,
+            password: password,
+            phone: phone
+        }
+
+        axios.post(URL_BACKEND, data)
+            .then((response) => {
+                // alert(JSON.parse(response));
+                console.log(">>> check response data: ", response.data)
+                console.log(">>> check response data x2: ", response.data.data)
+            })
+            .catch((error) => {
+                // alert(JSON.parse(error));
+                console.log(">>> check error: ", error)
+
+            })
         console.log("Check form info: ", { fullName, email, password, phone });
     }
 

@@ -1,10 +1,10 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Table, Button, Popconfirm, notification } from 'antd';
+import { Table, Popconfirm, notification } from 'antd';
 import UpdateUserModal from './update.user.modal';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ViewUserDetail from './view.user.detail';
-import DeleteUserPopconfirm from './delete.user.popconfirm';
+// import DeleteUserPopconfirm from './delete.user.popconfirm';
 import { deleteUserAPI } from '../../services/api.service';
 
 

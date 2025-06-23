@@ -1,7 +1,27 @@
 import { Drawer, Button } from "antd";
+import { useState } from "react";
 
 const ViewUserDetail = (props) => {
   const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen } = props;
+
+  const [selectedFile, setSelectedFile] = useState(null) // một state để lưu trữ info of file
+  const [preview, setPreview] = useState(null) // một state để lưu trữ url lại
+
+  const handleOnchangeFile = (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      selectedFile(null)
+      setPreview(null)
+      return;
+    }
+
+    // I've kept this example simple by using the first image instead of multiple
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file))
+    }
+    console.log(">>> check file: ", file);
+  }
 
   return (
     <>
@@ -31,21 +51,37 @@ const ViewUserDetail = (props) => {
             </p>
 
             <p style={{ marginBottom: "20px", fontSize: "16px" }}>Avatar:</p>
-            <div style={{ margin: "0 auto", textAlign: "center" }}>
+
+            <div style={{
+              marginTop: "10px", width: "150px", height: "100px",
+              border: "1px solid #ccc"
+            }}>
               <img
                 style={{
-                  maxWidth: "100%",
-                  width: "200px",
-                  height: "200px",
-                  borderRadius: "100px",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain"
                 }}
                 src={`${import.meta.env.VITE_BACKEND_URL}/images/avatar/${dataDetail.avatar
                   }`}
               />
             </div>
 
-
-
+            {preview &&
+              <div style={{
+                marginTop: "10px", width: "150px", height: "100px",
+                border: "1px solid #ccc"
+              }}>
+                <img
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain"
+                  }}
+                  src={preview}
+                />
+              </div>
+            }
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div></div>
               <div>
@@ -64,7 +100,12 @@ const ViewUserDetail = (props) => {
                     color: "#fff",
                     cursor: "pointer"
                   }}>Upload Avatar</label>
-                  <input type="file" id="btnUpload" hidden />
+                  <input
+                    type="file"
+                    id="btnUpload"
+                    hidden
+                    onChange={handleOnchangeFile}
+                  />
                 </div>
               </div>
             </div>

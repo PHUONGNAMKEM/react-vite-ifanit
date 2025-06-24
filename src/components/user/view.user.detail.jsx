@@ -1,15 +1,16 @@
-import { Drawer, Button } from "antd";
+import { Drawer, Button, notification } from "antd";
 import { useState } from "react";
+import { handleUploadFile, updateUserAvatarAPI } from "../../services/api.service";
 
 const ViewUserDetail = (props) => {
-  const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen } = props;
+  const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen, loadUser } = props;
 
   const [selectedFile, setSelectedFile] = useState(null) // một state để lưu trữ info of file
   const [preview, setPreview] = useState(null) // một state để lưu trữ url lại
 
   const handleOnchangeFile = (event) => {
     if (!event.target.files || event.target.files.length === 0) {
-      selectedFile(null)
+      setSelectedFile(null)
       setPreview(null)
       return;
     }
@@ -20,7 +21,43 @@ const ViewUserDetail = (props) => {
       setSelectedFile(file);
       setPreview(URL.createObjectURL(file))
     }
-    console.log(">>> check file: ", file);
+    // console.log(">>> check file: ", file);
+  }
+
+  const handleUpdateUserAvatar = async () => {
+    // 1: upload file
+    const resUpload = await handleUploadFile(selectedFile, "avatar")
+    if (resUpload.data) {
+      const newAvatar = resUpload.data.fileUploaded;
+
+      const resUpdateAvatar = await updateUserAvatarAPI(
+        newAvatar, dataDetail._id, dataDetail.fullName, dataDetail.phone
+      );
+      console.log(">>> check resUpdateAvatar: ", resUpdateAvatar)
+      if (resUpdateAvatar) {
+        setIsDetailOpen(false);
+        setSelectedFile(null)
+        setPreview(null)
+        await loadUser();
+
+        notification.success({
+          message: "Update user avatar",
+          description: "Update avatar successfully"
+        })
+
+      } else {
+        notification.error({
+          message: "Error update avatar",
+          description: JSON.stringify(resUpdateAvatar.message)
+        })
+      }
+    } else {
+      notification.error({
+        message: "Error upload file",
+        description: JSON.stringify(resUpload.message)
+      })
+    }
+    // 2. 
   }
 
   return (
@@ -52,10 +89,7 @@ const ViewUserDetail = (props) => {
 
             <p style={{ marginBottom: "20px", fontSize: "16px" }}>Avatar:</p>
 
-            <div style={{
-              marginTop: "10px", width: "150px", height: "100px",
-              border: "1px solid #ccc"
-            }}>
+            <div style={{ marginTop: "10px", width: "150px", height: "100px", }}>
               <img
                 style={{
                   width: "100%",
@@ -68,20 +102,26 @@ const ViewUserDetail = (props) => {
             </div>
 
             {preview &&
-              <div style={{
-                marginTop: "10px", width: "150px", height: "100px",
-                border: "1px solid #ccc"
-              }}>
-                <img
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain"
-                  }}
-                  src={preview}
-                />
-              </div>
+              <>
+                <div style={{ marginTop: "10px", width: "150px", height: "100px", marginBottom: "15px" }}>
+                  <img
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain"
+                    }}
+                    src={preview}
+                  />
+                </div>
+                <Button
+                  type="primary"
+                  onClick={() => handleUpdateUserAvatar()}
+                >Save</Button>
+
+              </>
+
             }
+
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div></div>
               <div>

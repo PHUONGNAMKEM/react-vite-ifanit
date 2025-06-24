@@ -30,10 +30,38 @@ const deleteUserAPI = (_id) => {
 }
 
 const fetchUserAPI = () => {
-    const URL_BACKEND = "/api/v1/user";
+    const URL_BACKEND = "/api/v1/user?current=1&pageSize=1";
     return axios.get(URL_BACKEND)
 }
 
+const handleUploadFile = (file, folder) => {
+    const URL_BACKEND = "/api/v1/file/upload";
+
+    let config = {
+        headers: {
+            "upload-type": folder,
+            "Content-Type": "multipart/form-data"
+        }
+    }
+
+    const bodyFormData = new FormData();
+    bodyFormData.append("fileImg", file);
+
+    return axios.post(URL_BACKEND, bodyFormData, config)
+}
+
+const updateUserAvatarAPI = (avatar, _id, fullName, phone) => {
+    const URL_BACKEND = "/api/v1/user";
+    const data = {
+        _id: _id,
+        avatar: avatar,
+        fullName, phone // ở đây viết tắt đi (destructuring) (tức là nó bằng với fullname: fullname thoi á mà) 
+    }
+
+    return axios.put(URL_BACKEND, data)
+}
+
 export {
-    createUserAPI, updateUserAPI, fetchUserAPI, deleteUserAPI
+    createUserAPI, updateUserAPI, fetchUserAPI, deleteUserAPI,
+    handleUploadFile, updateUserAvatarAPI
 }

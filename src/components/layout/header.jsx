@@ -58,6 +58,16 @@ const Header = () => {
             //     },
             // ],
         },
+        {
+            label: <Link to={"/register"}>Register</Link>,
+            key: '/register',
+            icon: <UsergroupDeleteOutlined />,
+        },
+        {
+            label: <Link to={"/login"}>Login</Link>,
+            key: '/login',
+            icon: <UsergroupDeleteOutlined />,
+        },
 
     ];
     return (<ul>

@@ -10,7 +10,7 @@ import { deleteUserAPI } from '../../services/api.service';
 
 const UserTable = (props) => {
 
-    const { userData, loadUser } = props;
+    const { userData, loadUser, current, pageSize, total, setCurrent, setPageSize } = props;
 
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
     const [dataUpdate, setDataUpdate] = useState(null);
@@ -30,7 +30,12 @@ const UserTable = (props) => {
                     showProgress: true,
                 }
             )
-            await loadUser();
+            // nếu như chỉ còn 1 user trên trang hiện tại và trang đang đứng không phải là trang đầu tiên (tức là nếu xóa thì sẽ ko còn dlieu trên trang này)
+            if (userData.length === 1 && current > 1) {
+                setCurrent(current - 1); // thì quay về trang trước
+            } else {
+                await loadUser(); // ko thì vẫn reload bình thường
+            }
         }
         else {
             notification.error(
@@ -51,7 +56,7 @@ const UserTable = (props) => {
             render: (_, record, index) => {
                 return (
                     <>
-                        {index + 1}
+                        {(index + 1) + (current - 1) * pageSize}
                     </>
                 )
             }
@@ -115,12 +120,43 @@ const UserTable = (props) => {
         },
     ];
 
+    const onChange = (pagination, filters, sorter, extra) => {
+
+        // if status of pagination changed -> set current
+        if (pagination && pagination.current) {
+            if (+pagination.current !== +current) {
+                setCurrent(+pagination.current)
+            }
+        }
+
+        // if status of pageSize changed -> set total pageSize
+        if (pagination && pagination.pageSize) {
+            if (+pagination.pageSize !== +pageSize) {
+                setPageSize(+pagination.pageSize)
+            }
+        }
+
+        console.log("check: ", { pagination, filters, sorter, extra });
+    };
+
+    console.log(">>> check child of current: ", current)
+
     return (
         <>
             <Table
+                // tableLayout="fixed"
                 columns={columns}
                 dataSource={userData}
                 rowKey={"_id"}
+                pagination={
+                    {
+                        current: current,
+                        pageSize: pageSize,
+                        showSizeChanger: true,
+                        total: total,
+                        showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
+                    }}
+                onChange={onChange}
             />
 
             <UpdateUserModal

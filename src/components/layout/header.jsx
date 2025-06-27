@@ -4,15 +4,20 @@ import { Menu } from "antd";
 import {
     HomeOutlined,
     UsergroupDeleteOutlined,
-    BookOutlined
+    BookOutlined,
+    SettingOutlined
 } from '@ant-design/icons';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { AuthContext } from "../context/auth.context";
 
 
 
 const Header = () => {
     const location = useLocation();
+
+    const { user } = useContext(AuthContext);
+    console.log(">>> check user: ", user)
 
     // Lấy path hiện tại từ URL, ví dụ: "/users"
     const path = location.pathname;
@@ -37,7 +42,7 @@ const Header = () => {
         },
         {
             label: <Link to={"/books"}>Books</Link>,
-            key: '/books ',
+            key: '/books',
             icon: <BookOutlined />,
             // children: [
             //     {
@@ -67,6 +72,15 @@ const Header = () => {
             label: <Link to={"/login"}>Login</Link>,
             key: '/login',
             icon: <UsergroupDeleteOutlined />,
+        },
+        {
+            label: <Link to={"/settings"}>Settings</Link>,
+            key: '/settings',
+            icon: <SettingOutlined />,
+            children: [
+                { label: <Link to={"/login"}>Login</Link>, key: '/login' },
+                { label: <Link to={"/register"}>Register</Link>, key: '/register' },
+            ],
         },
 
     ];

@@ -1,6 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 // import "./header.css"
-import { Menu } from "antd";
+import { Menu, message } from "antd";
 import {
     HomeOutlined,
     UsergroupDeleteOutlined,
@@ -12,13 +12,14 @@ import {
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
+import { logoutAPI } from "../../services/api.service";
 
 
 
 const Header = () => {
     const location = useLocation();
-
-    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { user, setUser } = useContext(AuthContext);
 
     // Lấy path hiện tại từ URL, ví dụ: "/users"
     const path = location.pathname;
@@ -28,6 +29,26 @@ const Header = () => {
     const onClick = (e) => {
         // setCurrent(e.key);
     };
+
+    const handleLogout = async () => {
+        const res = await logoutAPI();
+        if (res.data) {
+            // clear data
+            localStorage.removeItem("access_token")
+            setUser({
+                email: "",
+                phone: "",
+                fullName: "",
+                role: "",
+                avatar: "",
+                id: ""
+            });
+            message.success("Logout successfully")
+
+            // redirect user to home page
+            navigate("/");
+        }
+    }
 
     const items = [
         {
@@ -82,7 +103,7 @@ const Header = () => {
                 key: 'settings',
                 icon: <AliwangwangOutlined />,
                 children: [
-                    { label: "Logout", key: '/logout' },
+                    { label: <span onClick={() => handleLogout()}>Logout</span> },
                 ],
             },] : []),
     ];

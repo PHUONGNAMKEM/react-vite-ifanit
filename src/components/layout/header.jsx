@@ -5,7 +5,9 @@ import {
     HomeOutlined,
     UsergroupDeleteOutlined,
     BookOutlined,
-    SettingOutlined
+    SettingOutlined,
+    LoginOutlined,
+    AliwangwangOutlined
 } from '@ant-design/icons';
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -17,7 +19,6 @@ const Header = () => {
     const location = useLocation();
 
     const { user } = useContext(AuthContext);
-    console.log(">>> check user: ", user)
 
     // Lấy path hiện tại từ URL, ví dụ: "/users"
     const path = location.pathname;
@@ -25,7 +26,6 @@ const Header = () => {
     // Lay path theo key của item trong items, được quản lý bởi current
     const [current, setCurrent] = useState('');
     const onClick = (e) => {
-        console.log('click ', e);
         // setCurrent(e.key);
     };
 
@@ -37,12 +37,12 @@ const Header = () => {
         },
         {
             label: <Link to={"/users"}>User</Link>,
-            key: '/users',
+            key: 'users',
             icon: <UsergroupDeleteOutlined />,
         },
         {
             label: <Link to={"/books"}>Books</Link>,
-            key: '/books',
+            key: 'books',
             icon: <BookOutlined />,
             // children: [
             //     {
@@ -63,35 +63,38 @@ const Header = () => {
             //     },
             // ],
         },
-        {
-            label: <Link to={"/register"}>Register</Link>,
-            key: '/register',
-            icon: <UsergroupDeleteOutlined />,
-        },
-        {
-            label: <Link to={"/login"}>Login</Link>,
-            key: '/login',
-            icon: <UsergroupDeleteOutlined />,
-        },
-        {
-            label: <Link to={"/settings"}>Settings</Link>,
-            key: '/settings',
-            icon: <SettingOutlined />,
-            children: [
-                { label: <Link to={"/login"}>Login</Link>, key: '/login' },
-                { label: <Link to={"/register"}>Register</Link>, key: '/register' },
-            ],
-        },
 
+        ...(!user.id ? [
+            {
+                label: <Link to={"/login"}>Login</Link>,
+                key: 'login',
+                icon: <LoginOutlined />,
+            },
+            {
+                label: <Link to={"/register"}>Register</Link>,
+                key: 'register',
+                icon: <UsergroupDeleteOutlined />,
+            },] : []),
+
+        ...(user.id ? [
+            {
+                label: `Welcome ${user.fullName}`,
+                key: 'settings',
+                icon: <AliwangwangOutlined />,
+                children: [
+                    { label: "Logout", key: '/logout' },
+                ],
+            },] : []),
     ];
-    return (<ul>
-        <Menu
-            onClick={onClick}
-            selectedKeys={[path]} // đổi lại ko dùng current nữa
-            mode="horizontal"
-            items={items}
-        />
-    </ul>
+    return (
+        <ul>
+            <Menu
+                onClick={onClick}
+                selectedKeys={[path]} // đổi lại ko dùng current nữa
+                mode="horizontal"
+                items={items}
+            />
+        </ul>
     );
 }
 

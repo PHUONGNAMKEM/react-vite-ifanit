@@ -136,10 +136,8 @@ const UserTable = (props) => {
             }
         }
 
-        console.log("check: ", { pagination, filters, sorter, extra });
     };
 
-    console.log(">>> check child of current: ", current)
 
     return (
         <>

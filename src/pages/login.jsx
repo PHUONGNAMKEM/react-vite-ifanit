@@ -17,7 +17,6 @@ const LoginPage = () => {
         const res = await loginAPI(values.email, values.password)
 
         if (res.data) {
-            console.log(">>> check data: ", res)
             message.success("Login successfully")
             setIsLoading(false)
             localStorage.setItem("access_token", res.data.access_token)
@@ -80,7 +79,11 @@ const LoginPage = () => {
                                     },
                                 ]}
                             >
-                                <Input.Password />
+                                <Input.Password onKeyDown={(event) => {
+                                    if (event.key === "Enter") {
+                                        form.submit();
+                                    }
+                                }} />
                             </Form.Item>
 
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

@@ -33,7 +33,6 @@ const ViewUserDetail = (props) => {
       const resUpdateAvatar = await updateUserAvatarAPI(
         newAvatar, dataDetail._id, dataDetail.fullName, dataDetail.phone
       );
-      console.log(">>> check resUpdateAvatar: ", resUpdateAvatar)
       if (resUpdateAvatar) {
         setIsDetailOpen(false);
         setSelectedFile(null)

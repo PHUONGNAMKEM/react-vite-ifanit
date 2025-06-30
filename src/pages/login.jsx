@@ -12,8 +12,6 @@ const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { setUser } = useContext(AuthContext);
 
-
-
     const onFinish = async (values) => {
         setIsLoading(true)
         const res = await loginAPI(values.email, values.password)
